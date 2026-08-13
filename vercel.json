@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/scenehire-landing.html",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/scenehire-landing.html"
+    }
+  ]
+}
