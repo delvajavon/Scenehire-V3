@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SceneHire — The OS for temporary production teams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #EFEDE6;
+    --paper-2: #E4E1D6;
+    --ink: #14181F;
+    --ink-soft: #3A3F49;
+    --slate: #3D5A73;
+    --stamp: #B23A2E;
+    --line: #C9C6BC;
+    --highlight: #E8B23D;
+    --white: #FAF9F5;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Serif 4', serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .display{font-family:'Archivo', sans-serif; font-weight:800; letter-spacing:-0.02em;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--slate); font-weight:500;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+
+  /* texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(20,24,31,0.035) 1px, transparent 0);
+    background-size:22px 22px;
+    opacity:0.5;
+  }
+
+  .wrap{max-width:1240px; margin:0 auto; padding:0 40px; position:relative; z-index:1;}
+  @media (max-width:720px){ .wrap{padding:0 20px;} }
+
+  /* NAV */
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:26px 0; border-bottom:1px solid var(--line);
+  }
+  .wordmark{
+    font-family:'Archivo', sans-serif; font-weight:900; font-size:19px;
+    letter-spacing:0.06em;
+  }
+  .wordmark span{color:var(--stamp);}
+  .nav-links{display:flex; gap:36px; align-items:center;}
+  .nav-links a{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);
+    transition:color .15s;
+  }
+  .nav-links a:hover{color:var(--ink);}
+  .nav-right{display:flex; align-items:center; gap:22px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; font-weight:500;
+    padding:12px 22px; border-radius:100px; letter-spacing:0.02em;
+    border:1.5px solid var(--ink); cursor:pointer; transition:all .15s;
+  }
+  .btn-primary{background:var(--ink); color:var(--white);}
+  .btn-primary:hover{background:var(--slate); border-color:var(--slate);}
+  .btn-ghost{background:transparent; color:var(--ink);}
+  .btn-ghost:hover{background:var(--ink); color:var(--white);}
+  .login-link{font-family:'IBM Plex Mono',monospace; font-size:13px;}
+  @media (max-width:900px){ .nav-links{display:none;} }
+
+  /* HERO */
+  .hero{
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:60px;
+    align-items:center; padding:88px 0 100px;
+  }
+  @media (max-width:980px){ .hero{grid-template-columns:1fr; padding:56px 0 60px;} }
+
+  .hero-eyebrow{margin-bottom:22px;}
+  h1.headline{
+    font-size:clamp(40px, 5.2vw, 72px);
+    line-height:0.98; text-transform:uppercase;
+    max-width:11ch;
+    text-wrap:balance;
+    margin-bottom:26px;
+  }
+  .headline .accent{color:var(--stamp); font-style:normal;}
+  .sub{
+    font-size:19px; line-height:1.55; color:var(--ink-soft);
+    max-width:480px; margin-bottom:36px;
+  }
+  .hero-ctas{display:flex; gap:14px; flex-wrap:wrap;}
+
+  /* PAPER CARD MOCKUP */
+  .card-stage{ position:relative; }
+  .paper-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:6px;
+    box-shadow: 0 30px 60px -20px rgba(20,24,31,0.35), 0 2px 0 rgba(20,24,31,0.06);
+    transform:rotate(2deg);
+    padding:0;
+    overflow:hidden;
+    position:relative;
+  }
+  .perf{
+    display:flex; justify-content:space-between; padding:10px 18px 0;
+  }
+  .perf span{
+    width:7px; height:7px; border-radius:50%; background:var(--paper);
+    border:1px solid var(--line);
+  }
+  .card-head{
+    padding:20px 24px 14px; border-bottom:1px dashed var(--line);
+    display:flex; justify-content:space-between; align-items:flex-start;
+  }
+  .card-head .proj{font-family:'Archivo',sans-serif; font-weight:800; font-size:20px;}
+  .card-head .meta{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); margin-top:6px;}
+  .stamp-badge{
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:11px;
+    color:var(--stamp); border:2px solid var(--stamp); border-radius:50%;
+    width:64px; height:64px; display:flex; align-items:center; justify-content:center;
+    text-align:center; transform:rotate(-10deg); letter-spacing:0.04em; line-height:1.15;
+    flex-shrink:0;
+  }
+  .stats-row{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+    border-bottom:1px dashed var(--line);
+  }
+  .stat{padding:14px 18px; border-right:1px dashed var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .lab{font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.1em; color:var(--ink-soft); text-transform:uppercase;}
+  .stat .val{font-family:'IBM Plex Mono',monospace; font-size:16px; font-weight:600; margin-top:4px;}
+  .crew-list{padding:16px 24px 22px;}
+  .crew-list .lab{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:12px;}
+  .crew-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 0; border-bottom:1px solid #EFEDE6;
+  }
+  .crew-row:last-child{border-bottom:none;}
+  .crew-id{display:flex; align-items:center; gap:12px;}
+  .avatar{
+    width:32px; height:32px; border-radius:50%; background:var(--slate); color:var(--white);
+    display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace;
+    font-size:11px; font-weight:600;
+  }
+  .crew-name{font-family:'Source Serif 4',serif; font-size:14px; font-weight:600;}
+  .crew-role{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--ink-soft); margin-top:2px;}
+  .signed{
+    font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.08em;
+    background:var(--ink); color:var(--white); padding:4px 9px; border-radius:100px;
+  }
+  .float-tag{
+    position:absolute; background:var(--highlight); color:var(--ink);
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    padding:8px 14px; border-radius:4px; transform:rotate(-4deg);
+    box-shadow:0 8px 18px rgba(20,24,31,0.18);
+  }
+  .float-tag.f1{ top:-18px; left:-22px; }
+  @media (max-width:560px){ .float-tag.f1{display:none;} .stats-row{grid-template-columns:repeat(2,1fr);} }
+
+  /* TICKER */
+  .ticker-strip{
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--ink); overflow:hidden; padding:14px 0;
+    margin-top:28px;
+  }
+  .ticker-track{
+    display:flex; gap:48px; white-space:nowrap; width:max-content;
+    animation:scroll 32s linear infinite;
+  }
+  @keyframes scroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  .ticker-track span{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--white); opacity:0.85;
+  }
+  .ticker-track span.dot{color:var(--stamp); opacity:1;}
+  @media (prefers-reduced-motion: reduce){ .ticker-track{animation:none;} }
+
+  /* SECTION SHELL */
+  section{padding:100px 0;}
+  .sec-tear{
+    border-top:2px dashed var(--line); position:relative; padding-top:0; margin-top:0;
+  }
+  .sec-after-hero{padding-top:56px;}
+  .sec-head{max-width:640px; margin-bottom:56px;}
+  .sec-head .eyebrow{margin-bottom:16px;}
+  .sec-head h2{
+    font-family:'Archivo',sans-serif; font-weight:800; font-size:clamp(28px,3.4vw,42px);
+    text-transform:uppercase; line-height:1.06;
+    max-width:18ch;
+    text-wrap:balance;
+  }
+
+  /* BEFORE / AFTER SPLIT */
+  .split{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden;}
+  @media (max-width:820px){ .split{grid-template-columns:1fr;} }
+  .split-col{ background:var(--white); padding:36px 34px;}
+  .split-col.bad{ background:#F3EFE9; }
+  .split-col .kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+    margin-bottom:20px; display:flex; align-items:center; gap:8px;
+  }
+  .split-col.bad .kicker{color:var(--stamp);}
+  .split-col.good .kicker{color:var(--slate);}
+  .split-col ul{list-style:none;}
+  .split-col li{
+    font-size:16.5px; line-height:1.5; padding:12px 0; border-bottom:1px solid #E4E1D6;
+    display:flex; gap:12px;
+  }
+  .split-col.bad li::before{content:"×"; color:var(--stamp); font-family:'Archivo',sans-serif; font-weight:800;}
+  .split-col.good li::before{content:"✓"; color:var(--slate); font-family:'Archivo',sans-serif; font-weight:800;}
+  .split-col li:last-child{border-bottom:none;}
+
+  /* FEATURE GRID — tabbed call-sheet cards */
+  .feat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+  @media (max-width:980px){ .feat-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .feat-grid{grid-template-columns:1fr;} }
+  .feat-card{
+    background:var(--white); border:1px solid var(--line); border-radius:8px;
+    padding:26px 22px; position:relative; transition:transform .18s, box-shadow .18s;
+  }
+  .feat-card::before{
+    content:attr(data-tab); position:absolute; top:-11px; left:20px;
+    background:var(--ink); color:var(--white); font-family:'IBM Plex Mono',monospace;
+    font-size:10px; letter-spacing:0.1em; padding:4px 10px; border-radius:4px;
+  }
+  .feat-card:hover{ transform:translateY(-4px); box-shadow:0 16px 30px -14px rgba(20,24,31,0.25); }
+  .feat-card h3{
+    font-family:'Archivo',sans-serif; font-weight:800; font-size:19px; margin:14px 0 10px;
+    text-transform:uppercase;
+  }
+  .feat-card p{ font-size:14.5px; line-height:1.55; color:var(--ink-soft); }
+
+  /* QUOTE / STAMP SECTION */
+  .quote-block{
+    display:grid; grid-template-columns:auto 1fr; gap:36px; align-items:center;
+    background:var(--white); border:1px solid var(--line); border-radius:10px; padding:48px;
+  }
+  @media (max-width:700px){ .quote-block{grid-template-columns:1fr; text-align:left;} }
+  .big-stamp{
+    width:120px; height:120px; border:3px solid var(--stamp); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; transform:rotate(-8deg);
+    color:var(--stamp); font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:13px;
+    letter-spacing:0.06em; text-align:center; flex-shrink:0;
+  }
+  .quote-block blockquote{
+    font-size:22px; line-height:1.5; font-style:italic; margin-bottom:16px;
+    max-width:34ch;
+    text-wrap:balance;
+  }
+  .quote-block cite{
+    font-family:'IBM Plex Mono',monospace; font-style:normal; font-size:12.5px;
+    color:var(--ink-soft); letter-spacing:0.04em;
+  }
+
+  /* CTA */
+  .cta-band{
+    background:var(--ink); border-radius:12px; padding:70px 56px;
+    text-align:center; position:relative; overflow:hidden;
+  }
+  .cta-band h2{
+    color:var(--white); font-family:'Archivo',sans-serif; font-weight:800;
+    font-size:clamp(30px,4vw,48px); text-transform:uppercase; margin-bottom:16px;
+  }
+  .cta-band p{ color:#C9C6BC; font-size:17px; margin-bottom:34px; }
+  .cta-band .btn-primary{ background:var(--white); color:var(--ink); border-color:var(--white); }
+  .cta-band .btn-primary:hover{ background:var(--highlight); border-color:var(--highlight); }
+  .cta-band .btn-ghost{ color:var(--white); border-color:#565C68; }
+  .cta-band .btn-ghost:hover{ background:var(--white); color:var(--ink); border-color:var(--white); }
+  .cta-actions{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+
+  /* FOOTER */
+  footer{ padding:50px 0 60px; border-top:1px solid var(--line); }
+  .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+  .footer-row .wordmark{font-size:15px;}
+  .footer-note{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <div class="wordmark">SCENE<span>HIRE</span></div>
+    <div class="nav-links">
+      <a href="#">Product</a>
+      <a href="#">How it works</a>
+      <a href="#">For productions</a>
+    </div>
+    <div class="nav-right">
+      <a class="login-link" href="#">Log in</a>
+      <a class="btn btn-primary" href="#">Get started →</a>
+    </div>
+  </nav>
+
+  <section class="hero" style="padding-bottom:0;">
+    <div>
+      <div class="eyebrow hero-eyebrow">Deal memos · call sheets · payroll — one file</div>
+      <h1 class="headline display">The Operating System For Production Teams</h1>
+      <p class="sub">Manage crew, contracts, documents, schedules, and payments in one place — from onboarding to wrap.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#">Get Started</a>
+        <a class="btn btn-ghost" href="#">See how it works</a>
+      </div>
+    </div>
+
+    <div class="card-stage">
+      <div class="float-tag f1">6/8 signed</div>
+      <div class="paper-card">
+        <div class="perf"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="card-head">
+          <div>
+            <div class="proj">Nike Commercial</div>
+            <div class="meta">AUG 10–14, 2026 · LOS ANGELES, CA</div>
+          </div>
+          <div class="stamp-badge">CONFIRMED</div>
+        </div>
+        <div class="stats-row">
+          <div class="stat"><div class="lab">Total</div><div class="val">$2,050</div></div>
+          <div class="stat"><div class="lab">Pending</div><div class="val">$100</div></div>
+          <div class="stat"><div class="lab">Approved</div><div class="val">$750</div></div>
+          <div class="stat"><div class="lab">Paid</div><div class="val">$1,200</div></div>
+        </div>
+        <div class="crew-list">
+          <div class="lab">Crew &amp; talent · 8 people</div>
+          <div class="crew-row">
+            <div class="crew-id"><div class="avatar">MO</div><div><div class="crew-name">Maya Okafor</div><div class="crew-role">Director</div></div></div>
+            <span class="signed">SIGNED</span>
+          </div>
+          <div class="crew-row">
+            <div class="crew-id"><div class="avatar">DR</div><div><div class="crew-name">Daniel Reyes</div><div class="crew-role">Dir. of Photography</div></div></div>
+            <span class="signed">SIGNED</span>
+          </div>
+          <div class="crew-row">
+            <div class="crew-id"><div class="avatar">JS</div><div><div class="crew-name">John Smith</div><div class="crew-role">Camera Operator</div></div></div>
+            <span class="signed">SIGNED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="ticker-strip">
+  <div class="ticker-track">
+    <span>Email</span><span class="dot">·</span><span>Crew</span><span class="dot">·</span><span>Contracts</span><span class="dot">·</span><span>Call sheets</span><span class="dot">·</span><span>Payments</span><span class="dot">·</span><span>Schedules</span><span class="dot">·</span><span>Wrap reports</span><span class="dot">·</span>
+    <span>Email</span><span class="dot">·</span><span>Crew</span><span class="dot">·</span><span>Contracts</span><span class="dot">·</span><span>Call sheets</span><span class="dot">·</span><span>Payments</span><span class="dot">·</span><span>Schedules</span><span class="dot">·</span><span>Wrap reports</span><span class="dot">·</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="sec-tear sec-after-hero">
+    <div class="sec-head">
+      <div class="eyebrow">Every production starts with a new team</div>
+      <h2>The chaos before wrap, sorted before day one.</h2>
+    </div>
+    <div class="split">
+      <div class="split-col bad">
+        <div class="kicker">✕ Without SceneHire</div>
+        <ul>
+          <li>Contracts scattered across email threads and DocuSign links</li>
+          <li>Chasing crew for W-9s and headshots the week of the shoot</li>
+          <li>Budget totals living in three different spreadsheets</li>
+          <li>No single view of who's signed and who's still pending</li>
+        </ul>
+      </div>
+      <div class="split-col good">
+        <div class="kicker">✓ With SceneHire</div>
+        <ul>
+          <li>One project, every contract, document, and signature status</li>
+          <li>Automated document requests sent the moment crew is added</li>
+          <li>Live budget breakdown — pending, approved, processing, paid</li>
+          <li>A single source of truth from call sheet to final wrap</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-tear">
+    <div class="sec-head">
+      <div class="eyebrow">Built for the way sets actually run</div>
+      <h2>Four tabs. Everything a production needs.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card" data-tab="TAB 01">
+        <h3>Crew</h3>
+        <p>Add talent and crew in seconds, track onboarding, and see signature status at a glance.</p>
+      </div>
+      <div class="feat-card" data-tab="TAB 02">
+        <h3>Contracts</h3>
+        <p>Deal memos and NDAs generated from templates, sent for e-signature, filed automatically.</p>
+      </div>
+      <div class="feat-card" data-tab="TAB 03">
+        <h3>Payments</h3>
+        <p>Track pending, approved, and paid amounts per person — with or without Stripe connected.</p>
+      </div>
+      <div class="feat-card" data-tab="TAB 04">
+        <h3>Schedule</h3>
+        <p>Shoot days, call times, and locations in one calendar every department can see.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-tear">
+    <div class="quote-block">
+      <div class="big-stamp">WRAP<br>APPROVED</div>
+      <div>
+        <blockquote>"We ran a 40-person commercial shoot without a single contract chasing us down the week of. Everything was signed before call time."</blockquote>
+        <cite>— LINE PRODUCER, INDEPENDENT COMMERCIAL PRODUCTION CO.</cite>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-tear" style="padding-bottom:0;">
+    <div class="cta-band">
+      <h2>Ready for a cleaner wrap?</h2>
+      <p>Set up your first project in under ten minutes.</p>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="#">Get Started</a>
+        <a class="btn btn-ghost" href="#">Talk to us</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-row">
+      <div class="wordmark">SCENE<span style="color:var(--stamp)">HIRE</span></div>
+      <div class="footer-note">© 2026 SCENEHIRE — BUILT FOR SETS, NOT SPREADSHEETS</div>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

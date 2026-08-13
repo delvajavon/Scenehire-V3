@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SceneHire</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #111111;
+      --ink-soft: #2b2b2b;
+      --white: #ffffff;
+      --line: rgba(255, 255, 255, 0.24);
+      --glass: rgba(8, 8, 8, 0.28);
+      --panel: #f8f7f4;
+      --panel-line: #e5e1d8;
+      --hero-image: url("/Scenehire%20ov3.png");
+      --hero-overlay: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, rgba(10, 10, 10, 0.36) 48%, rgba(248, 247, 244, 0.98) 100%);
+      --hero-text: #111;
+      --hero-copy: #191919;
+    }
+
+    body[data-theme="day"] {
+      --hero-image: url("/Scenehire%20ov2.png");
+      --hero-overlay: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(245, 245, 245, 0.2) 46%, rgba(248, 247, 244, 0.98) 100%);
+      --hero-text: #111;
+      --hero-copy: #1d1d1d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background: var(--panel);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.45;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #121212;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--hero-overlay), var(--hero-image);
+      background-position: center, center;
+      background-size: cover, cover;
+      background-repeat: no-repeat, no-repeat;
+      transform: scale(1.02);
+      z-index: 0;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1240px, calc(100vw - 32px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 100vh;
+      min-height: 100svh;
+    }
+
+    .top-nav {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 14px 2px;
+      color: #121212;
+      gap: 12px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-links,
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      justify-self: center;
+    }
+
+    .nav-right {
+      gap: 14px;
+      justify-self: end;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid rgba(17, 17, 17, 0.28);
+      background: rgba(255, 255, 255, 0.72);
+      color: #111;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .mobile-nav {
+      display: none;
+      border: 1px solid rgba(17, 17, 17, 0.15);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-radius: 16px;
+      padding: 12px;
+      margin-top: 8px;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mobile-nav a {
+      display: block;
+      padding: 10px 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .mobile-nav a:hover {
+      background: rgba(17, 17, 17, 0.06);
+    }
+
+    .mobile-nav.open {
+      display: flex;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(17, 17, 17, 0.26);
+      background: rgba(255, 255, 255, 0.62);
+      border-radius: 999px;
+      padding: 4px 10px 4px 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .theme-toggle .track {
+      width: 34px;
+      height: 18px;
+      border-radius: 999px;
+      background: #111;
+      padding: 2px;
+      display: inline-flex;
+      align-items: center;
+      transition: background 0.2s ease;
+    }
+
+    .theme-toggle .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      transform: translateX(0);
+      transition: transform 0.2s ease;
+    }
+
+    body[data-theme="day"] .theme-toggle .track {
+      background: #f39a3d;
+    }
+
+    body[data-theme="day"] .theme-toggle .dot {
+      transform: translateX(16px);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      transition: transform 0.16s ease, opacity 0.16s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
+
+    .btn-dark {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+      padding: 10px 16px;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #111;
+      border-color: rgba(17, 17, 17, 0.34);
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+
+    .btn-dark .pill-icon {
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #fff;
+      color: #000;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .hero-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 56px 0 64px;
+    }
+
+    .hero-stack {
+      width: min(860px, 92vw);
+      margin-top: 30vh;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      color: #1f1f1f;
+      padding: 0;
+      border: none;
+      background: transparent;
+      font-size: clamp(13px, 1.4vw, 17px);
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      font-size: clamp(31px, 4.9vw, 62px);
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      font-weight: 600;
+      margin-bottom: 14px;
+      color: var(--hero-text);
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      width: min(760px, 92vw);
+      margin: 0 auto;
+      font-size: clamp(15px, 1.25vw, 19px);
+      color: var(--hero-copy);
+    }
+
+    .hero-actions {
+      margin-top: 22px;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .hero-note {
+      margin-top: 14px;
+      font-size: clamp(13px, 1.1vw, 15px);
+      color: #1f1f1f;
+    }
+
+    .section-wrap {
+      width: min(1180px, 92vw);
+      margin: 0 auto;
+      padding: 78px 0;
+    }
+
+    section + section {
+      border-top: 1px solid var(--panel-line);
+    }
+
+    h2 {
+      font-size: clamp(24px, 2.8vw, 38px);
+      line-height: 1.08;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .subhead {
+      font-size: clamp(15px, 1.2vw, 18px);
+      color: #3f3f3f;
+      margin-bottom: 30px;
+    }
+
+    .grid-four {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--panel-line);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .card-step {
+      font-size: 13px;
+      letter-spacing: 0.07em;
+      color: #676767;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .card h3 {
+      font-size: 19px;
+      margin-bottom: 8px;
+      line-height: 1.18;
+    }
+
+    .card p {
+      color: #464646;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .tool-item {
+      background: #fff;
+      border: 1px solid var(--panel-line);
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 14px;
+    }
+
+    .tool-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+
+    .tool-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid #ddd8ce;
+      background: #fbfaf7;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #2e2e2e;
+    }
+
+    .tool-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .tool-icon.stripe {
+      background: #635bff;
+      border-color: #574ff0;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .icon-email-stack {
+      width: 16px;
+      height: 16px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .icon-email-stack::before,
+    .icon-email-stack::after {
+      content: "";
+      position: absolute;
+      border-radius: 2px;
+    }
+
+    .icon-email-stack::before {
+      width: 10px;
+      height: 7px;
+      border: 1.6px solid currentColor;
+      left: 0;
+      top: 4px;
+      transform: skewX(-8deg);
+    }
+
+    .icon-email-stack::after {
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      right: 0;
+      top: 1px;
+      box-shadow: -3px 3px 0 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .tool-item strong {
+      font-size: 15px;
+    }
+
+    .comparison-eyebrow {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #6d6d6d;
+      margin-bottom: 10px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .comparison-col {
+      background: #fff;
+      border: 1px solid var(--panel-line);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .comparison-kicker {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .comparison-col.bad .comparison-kicker {
+      color: #8b3a2c;
+    }
+
+    .comparison-col.good .comparison-kicker {
+      color: #1f5a2f;
+    }
+
+    .comparison-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .comparison-list li {
+      font-size: 14px;
+      line-height: 1.48;
+      color: #353535;
+      padding: 10px 0;
+      border-bottom: 1px solid #ece8df;
+      display: flex;
+      gap: 10px;
+    }
+
+    .comparison-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 2px;
+    }
+
+    .comparison-col.bad .comparison-list li::before {
+      content: "×";
+      color: #8b3a2c;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .comparison-col.good .comparison-list li::before {
+      content: "✓";
+      color: #1f5a2f;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .faq-item {
+      background: #fff;
+      border: 1px solid var(--panel-line);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .faq-item h3 {
+      font-size: 17px;
+      line-height: 1.32;
+      margin-bottom: 8px;
+    }
+
+    .faq-item p {
+      font-size: 14px;
+      line-height: 1.52;
+      color: #3d3d3d;
+    }
+
+    .footer-cta {
+      background: #111;
+      color: #fff;
+      border-radius: 18px;
+      border: 1px solid #1e1e1e;
+      padding: 28px;
+    }
+
+    .footer-cta h2 {
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .footer-cta p {
+      color: #d4d4d4;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      max-width: 720px;
+    }
+
+    .footer-note {
+      color: #b8b8b8;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--panel-line);
+      margin-top: 26px;
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .site-footer .footer-brand {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-links {
+      display: inline-flex;
+      gap: 14px;
+      margin-left: auto;
+      margin-right: 16px;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .footer-links a {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .site-footer .footer-copy {
+      font-size: 12px;
+      color: #666;
+      letter-spacing: 0.03em;
+    }
+
+    @media (max-width: 1040px) {
+      .top-nav {
+        grid-template-columns: auto 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+        justify-self: end;
+      }
+
+      .brand {
+        font-size: 20px;
+      }
+
+      .nav-right,
+      .btn-dark {
+        font-size: 14px;
+      }
+
+      .theme-toggle {
+        font-size: 11px;
+        padding-right: 8px;
+      }
+
+      .grid-four {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .section-wrap {
+        width: min(100%, calc(100vw - 28px));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .top-nav {
+        padding: 12px 0 8px;
+      }
+
+      .brand {
+        font-size: 18px;
+      }
+
+      .btn-dark {
+        font-size: 13px;
+        padding: 9px 13px;
+      }
+
+      .btn-outline {
+        font-size: 13px;
+        padding: 9px 13px;
+      }
+
+      .nav-right {
+        gap: 8px;
+      }
+
+      .nav-right a[href="/login"] {
+        display: none;
+      }
+
+      .theme-toggle {
+        order: 2;
+      }
+
+      .nav-right .btn-dark {
+        order: 3;
+      }
+
+      .theme-toggle {
+        padding: 3px 8px 3px 5px;
+      }
+
+      .hero-content {
+        padding: 16px 0 42px;
+      }
+
+      .hero-stack {
+        margin-top: 4vh;
+      }
+
+      .tag {
+        font-size: 14px;
+        padding: 8px 12px;
+      }
+
+      .tools,
+      .grid-four {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-wrap {
+        padding: 52px 0;
+      }
+
+      .card,
+      .tool-item,
+      .faq-item {
+        padding: 14px;
+      }
+
+      .footer-cta {
+        padding: 20px;
+      }
+
+      h2 {
+        margin-bottom: 12px;
+      }
+
+      .subhead {
+        margin-bottom: 20px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .hero-inner {
+        width: min(100%, calc(100vw - 20px));
+      }
+
+      .hero-stack {
+        width: min(100%, calc(100vw - 24px));
+      }
+
+      .hero-actions {
+        width: 100%;
+      }
+
+      .hero-actions .btn,
+      .nav-right .btn-dark {
+        width: 100%;
+      }
+
+      .btn-dark .pill-icon {
+        width: 18px;
+        height: 18px;
+        font-size: 12px;
+      }
+
+      .site-footer {
+        align-items: flex-start;
+      }
+
+      .footer-links {
+        margin: 6px 0 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-inner">
+        <nav class="top-nav">
+          <a href="#home" class="brand">
+            <span>SCENEHIRE</span>
+          </a>
+          <div class="nav-links">
+            <a href="#features">Product</a>
+            <a href="#features">How it works</a>
+            <a href="#solutions">For productions</a>
+          </div>
+          <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+          <div class="nav-right">
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Toggle day and night theme">
+              <span class="track"><span class="dot"></span></span>
+              <span id="theme-label">Night</span>
+            </button>
+            <a href="/login">Log in</a>
+            <a class="btn btn-dark" href="/login">
+              <span>Get started</span>
+              <span class="pill-icon">→</span>
+            </a>
+          </div>
+        </nav>
+        <div class="mobile-nav" id="mobile-nav">
+          <a href="#features">Product</a>
+          <a href="#features">How it works</a>
+          <a href="#solutions">For productions</a>
+          <a href="/login">Log in</a>
+        </div>
+
+        <div class="hero-content">
+          <div class="hero-stack">
+            <h1>The Operating System For Production Teams</h1>
+            <p class="hero-copy">Scenehire collects signed documents, follows up, turns deal terms into payment-ready records, and keeps every hire organized — without requiring crew accounts.</p>
+            <div class="hero-actions">
+              <a class="btn btn-dark" href="/login">
+                <span>Book a demo</span>
+              </a>
+              <a class="btn btn-outline" href="#features">See the crew-hiring workflow</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="section-wrap">
+        <h2>One workflow, from outreach to payment-ready</h2>
+        <p class="subhead">Scenehire is built to make one part of production operations indispensable.</p>
+        <div class="grid-four">
+          <article class="card">
+            <p class="card-step">Step 01</p>
+            <h3>Add crew</h3>
+            <p>Create a structured crew record with role, dates, rate, and production details.</p>
+          </article>
+          <article class="card">
+            <p class="card-step">Step 02</p>
+            <h3>Send and collect</h3>
+            <p>Send deal memos, contracts, W-9s, insurance documents, and upload requests by secure email link.</p>
+          </article>
+          <article class="card">
+            <p class="card-step">Step 03</p>
+            <h3>Follow up automatically</h3>
+            <p>Scenehire reminds crew about missing signatures and documents, so your office does not have to chase.</p>
+          </article>
+          <article class="card">
+            <p class="card-step">Step 04</p>
+            <h3>Review and route payment</h3>
+            <p>Approve proposed records and route payments for payroll handoff, external payment, reimbursements, or optional Stripe payouts.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="solutions">
+      <div class="section-wrap">
+        <h2>Works with the tools your office already uses</h2>
+        <p class="subhead">You do not need to rip out your current process to use Scenehire.</p>
+        <div class="tools">
+          <div class="tool-item">
+            <div class="tool-head">
+              <span class="tool-icon" aria-hidden="true"><span class="icon-email-stack"></span></span>
+              <strong>Production email</strong>
+            </div>
+            Gmail and Microsoft 365 inbox connection
+          </div>
+          <div class="tool-item">
+            <div class="tool-head">
+              <span class="tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+              </span>
+              <strong>E-signature</strong>
+            </div>
+            Existing e-signature workflow or built-in signing
+          </div>
+          <div class="tool-item">
+            <div class="tool-head">
+              <span class="tool-icon stripe" aria-hidden="true">S</span>
+              <strong>Payments</strong>
+            </div>
+            Optional Stripe-powered payouts
+          </div>
+          <div class="tool-item">
+            <div class="tool-head">
+              <span class="tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M8 13h8"/><path d="M8 17h6"/></svg>
+              </span>
+              <strong>Payroll</strong>
+            </div>
+            Export or integration for payroll handoff
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="readiness-chart">
+      <div class="section-wrap">
+        <p class="comparison-eyebrow">Every production starts with a new team</p>
+        <h2>Get every crew hire ready before call time.</h2>
+        <div class="comparison-grid">
+          <article class="comparison-col bad">
+            <h3 class="comparison-kicker">✕ Without SceneHire</h3>
+            <ul class="comparison-list">
+              <li>Deal memos, email threads, signed PDFs, and W-9s live in separate places</li>
+              <li>Coordinators manually chase unsigned agreements and missing documents</li>
+              <li>Rates and payment terms are re-entered into spreadsheets</li>
+              <li>No one knows what is cleared, pending, or already paid</li>
+            </ul>
+          </article>
+          <article class="comparison-col good">
+            <h3 class="comparison-kicker">✓ With SceneHire</h3>
+            <ul class="comparison-list">
+              <li>Every crew hire has one complete record</li>
+              <li>Automated email reminders go out until required tasks are complete</li>
+              <li>Deal terms are extracted, reviewed, and turned into a payment-ready record</li>
+              <li>The production office sees a live readiness and payment-status view</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="section-wrap">
+        <h2>FAQ</h2>
+        <div class="faq-list">
+          <article class="faq-item">
+            <h3>Do crew members need a Scenehire account?</h3>
+            <p>No. They receive secure links by email to sign, upload, or complete requested information.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Does Scenehire run payroll?</h3>
+            <p>Scenehire prepares and routes approved records for payroll. Optional Stripe payouts are for approved non-payroll payments such as vendor invoices, loan-out payments, and reimbursements.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Can we keep using our current payment process?</h3>
+            <p>Yes. Mark payments as paid externally while keeping approvals, documents, and payment status in Scenehire.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="final-cta">
+      <div class="section-wrap">
+        <div class="footer-cta">
+          <h2>Stop chasing paperwork before call time.</h2>
+          <p>See every crew member’s documents, deal status, payment route, and next action in one production workspace.</p>
+          <a class="btn btn-dark" href="http://localhost:8080/scenehire-landing.html#">
+            <span>Book a demo</span>
+          </a>
+          <p class="footer-note">Built for production offices. No crew accounts required.</p>
+        </div>
+        <div class="site-footer">
+          <div class="footer-brand">SCENEHIRE</div>
+          <div class="footer-links">
+            <a href="/privacy-policy.html">Privacy Policy</a>
+            <a href="/terms-of-service.html">Terms of Service</a>
+          </div>
+          <div class="footer-copy">© 2026 SCENEHIRE — BUILT FOR SETS, NOT SPREADSHEETS</div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    (function () {
+      var key = "scenehire.landing-theme";
+      var root = document.body;
+      var toggle = document.getElementById("theme-toggle");
+      var label = document.getElementById("theme-label");
+      var menuToggle = document.getElementById("menu-toggle");
+      var mobileNav = document.getElementById("mobile-nav");
+
+      function applyTheme(theme) {
+        root.setAttribute("data-theme", theme);
+        if (label) label.textContent = theme === "day" ? "Day" : "Night";
+        if (toggle) toggle.setAttribute("aria-pressed", String(theme === "day"));
+      }
+
+      var saved = localStorage.getItem(key);
+      var initial = saved === "day" || saved === "night" ? saved : "night";
+      applyTheme(initial);
+
+      if (toggle) {
+        toggle.addEventListener("click", function () {
+          var current = root.getAttribute("data-theme") === "day" ? "day" : "night";
+          var next = current === "day" ? "night" : "day";
+          applyTheme(next);
+          localStorage.setItem(key, next);
+        });
+      }
+
+      if (menuToggle && mobileNav) {
+        menuToggle.addEventListener("click", function () {
+          var isOpen = mobileNav.classList.toggle("open");
+          menuToggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        mobileNav.querySelectorAll("a").forEach(function (link) {
+          link.addEventListener("click", function () {
+            mobileNav.classList.remove("open");
+            menuToggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
