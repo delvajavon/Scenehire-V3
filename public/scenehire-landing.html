@@ -166,13 +166,10 @@
     .theme-toggle {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
       border: 1px solid rgba(17, 17, 17, 0.26);
       background: rgba(255, 255, 255, 0.62);
       border-radius: 999px;
-      padding: 4px 10px 4px 6px;
-      font-size: 12px;
-      font-weight: 700;
+      padding: 4px 6px;
       cursor: pointer;
       transition: background 0.2s ease;
     }
@@ -556,6 +553,7 @@
       border-radius: 18px;
       border: 1px solid #1e1e1e;
       padding: 28px;
+      text-align: center;
     }
 
     .footer-cta h2 {
@@ -569,6 +567,14 @@
       line-height: 1.5;
       margin-bottom: 16px;
       max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .footer-cta .btn-dark {
+      padding: 14px 30px;
+      font-size: 17px;
+      font-weight: 700;
     }
 
     .footer-note {
@@ -779,17 +785,16 @@
           </a>
           <div class="nav-links">
             <a href="#features">Product</a>
-            <a href="#features">How it works</a>
-            <a href="#solutions">For productions</a>
+            <a href="#solutions">How it works</a>
+            <a href="#readiness-chart">For productions</a>
           </div>
           <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
           <div class="nav-right">
             <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Toggle day and night theme">
               <span class="track"><span class="dot"></span></span>
-              <span id="theme-label">Night</span>
             </button>
             <a href="/login">Log in</a>
-            <a class="btn btn-dark" href="/login">
+            <a class="btn btn-dark" href="https://cal.com/scenehire">
               <span>Get started</span>
               <span class="pill-icon">→</span>
             </a>
@@ -797,8 +802,8 @@
         </nav>
         <div class="mobile-nav" id="mobile-nav">
           <a href="#features">Product</a>
-          <a href="#features">How it works</a>
-          <a href="#solutions">For productions</a>
+          <a href="#solutions">How it works</a>
+          <a href="#readiness-chart">For productions</a>
           <a href="/login">Log in</a>
         </div>
 
@@ -807,10 +812,9 @@
             <h1>The Operating System For Production Teams</h1>
             <p class="hero-copy">Scenehire collects signed documents, follows up, turns deal terms into payment-ready records, and keeps every hire organized — without requiring crew accounts.</p>
             <div class="hero-actions">
-              <a class="btn btn-dark" href="/login">
+              <a class="btn btn-dark" href="https://cal.com/scenehire">
                 <span>Book a demo</span>
               </a>
-              <a class="btn btn-outline" href="#features">See the crew-hiring workflow</a>
             </div>
           </div>
         </div>
@@ -939,7 +943,7 @@
         <div class="footer-cta">
           <h2>Stop chasing paperwork before call time.</h2>
           <p>See every crew member’s documents, deal status, payment route, and next action in one production workspace.</p>
-          <a class="btn btn-dark" href="http://localhost:8080/scenehire-landing.html#">
+          <a class="btn btn-dark" href="https://cal.com/scenehire">
             <span>Book a demo</span>
           </a>
           <p class="footer-note">Built for production offices. No crew accounts required.</p>
@@ -960,13 +964,11 @@
       var key = "scenehire.landing-theme";
       var root = document.body;
       var toggle = document.getElementById("theme-toggle");
-      var label = document.getElementById("theme-label");
       var menuToggle = document.getElementById("menu-toggle");
       var mobileNav = document.getElementById("mobile-nav");
 
       function applyTheme(theme) {
         root.setAttribute("data-theme", theme);
-        if (label) label.textContent = theme === "day" ? "Day" : "Night";
         if (toggle) toggle.setAttribute("aria-pressed", String(theme === "day"));
       }
 
