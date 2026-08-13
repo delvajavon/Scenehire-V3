@@ -125,14 +125,47 @@
 
     .menu-toggle {
       display: none;
+      align-items: center;
+      justify-content: center;
       border: 1px solid rgba(17, 17, 17, 0.28);
       background: rgba(255, 255, 255, 0.72);
       color: #111;
       border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 700;
+      width: 42px;
+      height: 42px;
+      padding: 0;
       cursor: pointer;
+    }
+
+    .menu-toggle .menu-bars {
+      position: relative;
+      width: 16px;
+      height: 12px;
+      display: inline-block;
+    }
+
+    .menu-toggle .menu-bars::before,
+    .menu-toggle .menu-bars::after,
+    .menu-toggle .menu-bars span {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .menu-toggle .menu-bars::before {
+      top: 0;
+    }
+
+    .menu-toggle .menu-bars span {
+      top: 5px;
+    }
+
+    .menu-toggle .menu-bars::after {
+      bottom: 0;
     }
 
     .mobile-nav {
@@ -153,6 +186,15 @@
       border-radius: 10px;
       font-size: 14px;
       font-weight: 600;
+    }
+
+    .mobile-nav .btn {
+      width: 100%;
+      margin-bottom: 4px;
+    }
+
+    .mobile-nav-tools {
+      display: none;
     }
 
     .mobile-nav a:hover {
@@ -572,6 +614,9 @@
     }
 
     .footer-cta .btn-dark {
+      background: #fff;
+      color: #111;
+      border-color: #fff;
       padding: 14px 30px;
       font-size: 17px;
       font-weight: 700;
@@ -680,16 +725,33 @@
         gap: 8px;
       }
 
+      .nav-right .btn-dark {
+        display: none;
+      }
+
       .nav-right a[href="/login"] {
         display: none;
       }
 
-      .theme-toggle {
-        order: 2;
+      .nav-right .theme-toggle {
+        display: none;
       }
 
-      .nav-right .btn-dark {
-        order: 3;
+      .mobile-nav-tools {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 2px 8px;
+        border-top: 1px solid rgba(17, 17, 17, 0.08);
+        margin-top: 4px;
+      }
+
+      .mobile-nav-tools span {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #666;
       }
 
       .theme-toggle {
@@ -788,7 +850,9 @@
             <a href="#solutions">How it works</a>
             <a href="#readiness-chart">For productions</a>
           </div>
-          <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+          <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open navigation menu">
+            <span class="menu-bars" aria-hidden="true"><span></span></span>
+          </button>
           <div class="nav-right">
             <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Toggle day and night theme">
               <span class="track"><span class="dot"></span></span>
@@ -801,10 +865,20 @@
           </div>
         </nav>
         <div class="mobile-nav" id="mobile-nav">
+          <a class="btn btn-dark" href="https://cal.com/scenehire">
+            <span>Get started</span>
+            <span class="pill-icon">→</span>
+          </a>
           <a href="#features">Product</a>
           <a href="#solutions">How it works</a>
           <a href="#readiness-chart">For productions</a>
           <a href="/login">Log in</a>
+          <div class="mobile-nav-tools">
+            <span>Theme</span>
+            <button class="theme-toggle" data-theme-toggle type="button" aria-pressed="false" aria-label="Toggle day and night theme">
+              <span class="track"><span class="dot"></span></span>
+            </button>
+          </div>
         </div>
 
         <div class="hero-content">
@@ -963,27 +1037,29 @@
     (function () {
       var key = "scenehire.landing-theme";
       var root = document.body;
-      var toggle = document.getElementById("theme-toggle");
+      var toggles = Array.prototype.slice.call(document.querySelectorAll("[data-theme-toggle], #theme-toggle"));
       var menuToggle = document.getElementById("menu-toggle");
       var mobileNav = document.getElementById("mobile-nav");
 
       function applyTheme(theme) {
         root.setAttribute("data-theme", theme);
-        if (toggle) toggle.setAttribute("aria-pressed", String(theme === "day"));
+        toggles.forEach(function (toggle) {
+          toggle.setAttribute("aria-pressed", String(theme === "day"));
+        });
       }
 
       var saved = localStorage.getItem(key);
-      var initial = saved === "day" || saved === "night" ? saved : "night";
+      var initial = saved === "day" || saved === "night" ? saved : "day";
       applyTheme(initial);
 
-      if (toggle) {
+      toggles.forEach(function (toggle) {
         toggle.addEventListener("click", function () {
           var current = root.getAttribute("data-theme") === "day" ? "day" : "night";
           var next = current === "day" ? "night" : "day";
           applyTheme(next);
           localStorage.setItem(key, next);
         });
-      }
+      });
 
       if (menuToggle && mobileNav) {
         menuToggle.addEventListener("click", function () {
